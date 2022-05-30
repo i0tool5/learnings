@@ -1,8 +1,8 @@
 package func_test
 
 import (
-	"sync"
-	"time"
+    "sync"
+    "time"
 )
 
 /*
@@ -12,40 +12,40 @@ import (
 */
 
 func all(b []bool) bool {
-	for _, v := range b {
-		if !v {
-			return false
-		}
-	}
-	return true
+    for _, v := range b {
+        if !v {
+            return false
+        }
+    }
+    return true
 }
 
 func combine[T any](chans ...chan T) (out chan T) {
-	out = make(chan T)
-	go func() {
-		closed := make([]bool, len(chans))
-		for {
-			for n, chann := range chans {
-				if !closed[n] {
-					select {
-					case v, ok := <-chann:
-						if !ok {
-							closed[n] = true
-							continue
-						}
-						out <- v
-					default:
-						continue
-					}
-				}
-			}
-			if all(closed) {
-				close(out)
-				return
-			}
-		}
-	}()
-	return
+    out = make(chan T)
+    go func() {
+        closed := make([]bool, len(chans))
+        for {
+            for n, chann := range chans {
+                if !closed[n] {
+                    select {
+                    case v, ok := <-chann:
+                        if !ok {
+                            closed[n] = true
+                            continue
+                        }
+                        out <- v
+                    default:
+                        continue
+                    }
+                }
+            }
+            if all(closed) {
+                close(out)
+                return
+            }
+        }
+    }()
+    return
 }
 
 /*
@@ -55,42 +55,42 @@ func combine[T any](chans ...chan T) (out chan T) {
 */
 
 func combineTwo[T any](chans ...chan T) (out chan T) {
-	out = make(chan T)
-	wg := new(sync.WaitGroup)
+    out = make(chan T)
+    wg := new(sync.WaitGroup)
 
-	wg.Add(len(chans))
-	for n, ch := range chans {
-		go func(x int, c chan T) {
-			for v := range c {
-				out <- v
-			}
-			wg.Done()
-		}(n, ch)
-	}
+    wg.Add(len(chans))
+    for n, ch := range chans {
+        go func(x int, c chan T) {
+            for v := range c {
+                out <- v
+            }
+            wg.Done()
+        }(n, ch)
+    }
 
-	go func() {
-		wg.Wait()
-		close(out)
-	}()
+    go func() {
+        wg.Wait()
+        close(out)
+    }()
 
-	return out
+    return out
 }
 
 func sendData[T any](start, stop int,
-	sleep time.Duration, sndVal T, outCh chan<- T) {
+    sleep time.Duration, sndVal T, outCh chan<- T) {
 
-	for i := start; i < stop; i++ {
-		time.Sleep(sleep)
-		outCh <- sndVal
-	}
-	close(outCh)
+    for i := start; i < stop; i++ {
+        time.Sleep(sleep)
+        outCh <- sndVal
+    }
+    close(outCh)
 }
 
 func consume[T any](inChan <-chan T) (x []T) {
-	x = make([]T, 0)
-	for v := range inChan {
-		x = append(x, v)
-	}
+    x = make([]T, 0)
+    for v := range inChan {
+        x = append(x, v)
+    }
 
-	return x
+    return x
 }
