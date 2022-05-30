@@ -12,7 +12,7 @@ import (
 */
 
 func all(b []bool) bool {
-	for _, v := range b {
+for _, v := range b {
 		if !v {
 			return false
 		}
@@ -25,7 +25,7 @@ func combine[T any](chans ...chan T) (out chan T) {
 	go func() {
 		closed := make([]bool, len(chans))
 		for {
-			for n, chann := range chans {
+		    for n, chann := range chans {
 				if !closed[n] {
 					select {
 					case v, ok := <-chann:
