@@ -3,7 +3,7 @@ package func_test
 import (
 	"sort"
 	"testing"
-	"time"
+    "time"
 )
 
 func TestCombineOne(t *testing.T) {
