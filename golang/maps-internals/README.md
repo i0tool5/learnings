@@ -6,7 +6,14 @@ Source code of the map struct is [here](https://go.dev/src/runtime/map.go)
 
 - [Preface](#preface)
 - [Implementation in Go](#implementation-in-go)
-	- []()
+	- [Hash functions](#hash-functions)
+	- [Buckets](#buckets)
+		- [Bucket selection](#bucket-selection)
+		- [Bucket overflow](#bucket-overflow)
+	- [Map grow and Evacuation](#map-grow-and-evacuation)
+	- [Map creation](#map-creation)
+	- [Retrieving map value](#retrieving-map-value)
+- [Notes](#notes)
 - [Conclusion](#conclusion)
 
 ## Preface
@@ -212,5 +219,26 @@ m[5] = "V"
 
 It is impossible to take a reference of map value due to the evacuation process, that will invalidate the address of the reference
 
+### Map iteration is always random
+
+For iteration over map elements, the *`hiter`* structure is responsible. And to initialize this structure *`mapiterinit`* function is used.
+
+```go
+// mapiterinit initializes the hiter struct used for ranging over maps.
+// The hiter struct pointed to by 'it' is allocated on the stack
+// by the compilers order pass or on the heap by reflect_mapiterinit.
+// Both need to have zeroed hiter since the struct contains pointers.
+func mapiterinit(t *maptype, h *hmap, it *hiter)
+```
+
+The order of map elements is undefined. And it is undefined because the order of the elements depends on a very large number of factors, such as the hash function used, the size, whether there were evacuations, etc. But iteration process over a map is **ALWAYS** random because:
+
+```go
+/* ...snip... */
+// decide where to start
+r := uintptr(fastrand())
+/* ...snip... */
+```
+
 ## Conclusion
-*TODO*
+Knowing the internals of a map will help you write more efficient code 😉.
