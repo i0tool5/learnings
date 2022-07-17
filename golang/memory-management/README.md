@@ -23,6 +23,7 @@ This process is started again when the program allocates additional memory propo
 > If GOGC = 100 and we use 4M, we will be GC again when we get to 8M (this mark is tracked in the next_gc variable). This allows you to keep the cost of garbage collection in a linear proportion to the cost of allocation. The GOGC setting simply changes the linear constant (as well as the amount of extra memory used).
 
 ### Links:
+- Official Go [documentation](https://go.dev/doc/gc-guide) about GC
 - Article [original](https://medium.com/@ankur_anand/a-visual-guide-to-golang-memory-allocator-from-ground-up-e132258453ed)
 - About the Go garbage collector in the [go blog](https://blog.golang.org/ismmkeynote) and [google groups](https://groups.google.com/g/golang-nuts/c/KJiyv2mV2pU/m/wdBUH1mHCAAJ).
 - About switching to [another type of GC](http://golang.org/s/gctoc)
