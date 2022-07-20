@@ -6,6 +6,10 @@ Memory in Go is managed by a runtime ( **goruntime** ). This frees the developer
 
 **Go runtime** prefers to allocate memory on the stack, so most of the allocated memory will be there. Each goroutine has its own stack and, if possible, the runtime will allocate space in it. As an optimization, the compiler tries to carry out the so-called ***escape analysis***, that is, to check that the function variable is not mentioned outside its scope. If the compiler manages to find out the lifetime of a variable, it will be placed on the stack, otherwise it will be placed on the heap. Usually, if a program has a pointer to an object, that object is stored on the heap. Unlike the stack, memory on the heap must be manually freed. In the case of Go, this is the responsibility of the garbage collector.
 
+## Allocator
+
+Go runtime uses **[TCMalloc](https://github.com/google/tcmalloc)** instead of using Linux `malloc`. This is due to the fact that **TCMalloc** tries to minimize possible memory fragmentation. Memory fragmentation can also be eliminated by using the *GC*, which will move objects to other places in memory. But this leads to an additional overhead, since the addresses of the moved objects change, and you also have to modify the links of those objects that refer to them. This is an expensive operation that can cause an increase in process response time.
+
 ## Garbage collector
 Go uses non-generational concurrent, tri-color mark and sweep garbage collector. What this means will be described in more detail below.
 - **non-generational**. The generational hypothesis suggests that short-lived objects, such as temporary variables, are most often cleaned up. Thus, the generational garbage collector focuses on newly allocated objects. However, as mentioned earlier, compiler optimizations allow Go to allocate objects on the stack with a known lifetime. This means that there will be fewer objects on the heap that will be collected by the garbage collector. In turn, this means that a generational garbage collector is not needed in Go. So Go uses a non-generational garbage collector.
@@ -21,6 +25,12 @@ In Go, this is implemented like this:
 This process is started again when the program allocates additional memory proportional to the memory used. This is defined by the `GOGC` environment variable, which is set to 100 by default. The Go source code describes it like this:
 
 > If GOGC = 100 and we use 4M, we will be GC again when we get to 8M (this mark is tracked in the next_gc variable). This allows you to keep the cost of garbage collection in a linear proportion to the cost of allocation. The GOGC setting simply changes the linear constant (as well as the amount of extra memory used).
+
+## Scavenger
+
+TODO
+
+## Conclusion
 
 ### Links:
 - Official Go [documentation](https://go.dev/doc/gc-guide) about GC
