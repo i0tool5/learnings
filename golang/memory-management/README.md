@@ -47,9 +47,9 @@ Up to and including **`Go 1.11`**, scavenger ran periodically every 2.5 minutes,
 ---
 
 In **`Go 1.13`**, the periodic scavenger has been replaced with a [continuously running](https://github.com/golang/go/issues/30333) scavenger. The background goroutine runs scavenger so that the total CPU cost of running scavenger does not exceed 1% of the CPU, but in reality it costs a little more, since scavenger is forced to synchronize access to internal runtime structures with allocating goroutines. The target RSS value that the background scavenger tries to bring the process to was expressed by this [formula](https://github.com/golang/go/blob/go1.13/src/runtime/mgcscavenge.go#L20):
-```
-    GOAL=(retainExtraPercent + 100) / 100 * NextGC
-```
+
+$$ Goal={retainExtraPercent + 100 \over 100} * NextGC $$
+
 where *retainExtraPercent* was equal to 10, i.e. scavenger laid a 10% buffer of the target heap size for reuse in new allocations. 
 
 ---
