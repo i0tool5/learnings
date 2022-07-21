@@ -36,7 +36,7 @@ It's important to note that Go never uses the **munmap** syscall to reduce the s
 
 At the same time, new allocations in runtime can occur both from ordinary pages and from pages “returned” to the operating system. This explains the [counterintuitive behavior](https://github.com/golang/go/issues/32284) of the `HeapReleased` indicator. It looks like it should grow monotonically, but in reality it can decrease if the Go runtime decides to access the "returned" virtual memory area via **madvice** in order to allocate new objects.
 
---
+---
 
 Up to and including **`Go 1.11`**, scavenger ran periodically every 2.5 minutes, and freed pages from spans that had not been used for more than 5 minutes. The **madvice** argument was the *MADV_DONTNEED* parameter: it prompted the OS that the memory can be taken back, while the RSS of the process synchronously decreased at the time of the system call.
 
@@ -56,7 +56,7 @@ where *retainExtraPercent* was equal to 10, i.e. scavenger laid a 10% buffer of 
 
 In **`Go 1.14`**, this [formula has been refined](https://github.com/golang/go/blob/go1.14/src/runtime/mgcscavenge.go#L21) to more explicitly account for allocator fragmentation.
 
---
+---
 
 In **`Go 1.16`**, the decision was made to [roll back](https://github.com/golang/go/issues/42330) to *MADV_DONTNEED* in order to make process RSS estimation more accurate.
 
