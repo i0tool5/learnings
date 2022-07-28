@@ -12,5 +12,5 @@ The purpose of this - some kind of centralization and/or systematization of know
 - [Python](/python/README.md)
 - [Rust](/rust-lang/README.md)
 - InfoSec
-- NetWorks
-- Administration
+- Networks
+- [Administration](/administration/README.md)
