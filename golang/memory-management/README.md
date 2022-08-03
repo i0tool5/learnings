@@ -62,7 +62,7 @@ In **`Go 1.16`**, the decision was made to [roll back](https://github.com/golang
 
 ---
 
-In **`Go 1.19`** The introduction of the SetMemoryLimit function will require modifications to the scavenger startup. Now the intensity of the scavenger will be controlled by a PI controller: the closer the memory consumption approaches the limit, the higher will be the CPU fraction allocated to the scavenger (up to 10%).
+In **`Go 1.19`** The introduction of the SetMemoryLimit function will require modifications to the scavenger startup. Now the intensity of the scavenger will be controlled by a PI controller: the closer the memory consumption approaches the limit, the higher will be the CPU fraction allocated to the scavenger (up to 10%). [Release notes](https://go.dev/doc/go1.19#runtime) describing the changes in the runtime associated with the introduction of the soft memory limits feature.
 
 ## Summary
 
