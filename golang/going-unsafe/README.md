@@ -136,7 +136,7 @@ Output will be the following:
 [UNSAFE] data[4] == 8097789225072551525
 ```
 
-What is this? Where is 400 and 500?! So, as Go using copy semantics, underlying array of the passed argument to the appender function was reallocated, but the original was not changed at all. When we passing it to the lowLevelSLice function, the underlying array poiner is the same, which was in the argument definition.
+What is this? Where are 400 and 500?! So, as Go using copy semantics, underlying array of the passed argument to the appender function was reallocated, but the original was not changed at all. When we passing it to the lowLevelSLice function, the underlying array poiner is the same, which was in the argument definition.
 
 Lets modify appender function for the last time:
 ```go
@@ -191,9 +191,4 @@ Yeah. Thats it!
 
 ## Conclusion
 
-Why use unsafe? It is faster. Run some benchmarks (someday there will be benchmarks) and u see performance boost, because unsafe code didn't check array bounds. This leads to the security problems, such as information disclosure (iff by one) and make possible the buffer overflow vulns.
-
-----
-
-- TODO: add map example
-- TODO: add comparentment benchmarks
+Why use unsafe? It is faster. Run some benchmarks (someday there will be benchmarks) and u see performance boost, because unsafe code didn't check array bounds. But, this leads to the security problems, such as information disclosure (off by one) and make possible the buffer overflow vulns.
