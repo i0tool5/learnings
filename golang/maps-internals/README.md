@@ -81,13 +81,40 @@ type bmap struct {
 ```
 As documentation says, the first elements in bucket are keys and after them are the values
 
-#### Bucket selection
+#### Bucket selection (***Simplyfied***)
+To select a bucket, firstly we need to calculate bucket mask.
 
-Low order bits are used in specific bucket selection. This bits are calculated as:
+```go
+// bucketShift returns 1<<b, optimized for code generation.
+func bucketShift(b uint8) uintptr {
+    // Masking the shift amount allows overflow checks to be elided.
+    return uintptr(1) << (b & (goarch.PtrSize*8 - 1))
+}
+
+// bucketMask returns 1<<b - 1, optimized for code generation.
+func bucketMask(b uint8) uintptr {
+    return bucketShift(b) - 1
+}
 ```
-hash(key) % len(buckets)
+*b uint8* - is a `B` field in `hmap` structure (log_2 of number of buckets)
+
+After that the number of the bucket can be calculated. For this purpose the "bit AND" is used:
+```go
+m := bucketMask(h.B)
+b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.bucketsize)))
 ```
-> But to speed up calculation, the hash is represented in it binary form and hmap structure contains the **B** field, which comment is self-descriptive. So, if there are 4 buckets B is equal to 2 (because log2(4) is 2) and last two least significant bits of the hash are used! 🤯
+Let's decompose this:
+- *h.buckets* - unsafe pointer to the buckets of given hmap
+- *hash* - hash of the map key
+- *m* - bucket mask
+- *b* - calculated pointer to the bucket
+
+So, algorithm is following:
+1. Take the hash of the key
+2. Calculate bucket mask
+3. Use pointer arighmetics: add to the pointer to the buckets an "shift", where the shift is ANDed hash and bucket mask
+
+> To speed up calculation, the hash is represented in it binary form and hmap structure contains the **B** field, which comment is self-descriptive. So, if there are 4 buckets B is equal to 2 (because log2(4) is 2) and last two least significant bits of the hash are used! 🤯
 
 #### Bucket overflow
 
