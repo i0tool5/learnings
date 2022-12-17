@@ -20,7 +20,7 @@ Go uses [tracing](https://en.wikipedia.org/wiki/Tracing_garbage_collection) non-
 > **Note**: GC has its own pool of goroutines, that run concurrently with business logic goroutines
 
 In Go, this is implemented like this:
-1. All goroutines reach the safe point of garbage collection through a process called **[stop the world](#gc_stop_the_world)**. This temporarily stops the execution of the entire program and turns on the write barrier to maintain the integrity of the data on the heap. This approach provides parallelism by allowing goroutines and GC to run at the same time. When all GC goroutines activate the barrier, the Go runtime “starts the world” and forces the workers to do the garbage collection work.
+1. All goroutines reach the safe point of garbage collection through a process called **[stop the world](#gc-stop-the-world)**. This temporarily stops the execution of the entire program and turns on the write barrier to maintain the integrity of the data on the heap. This approach provides parallelism by allowing goroutines and GC to run at the same time. When all GC goroutines activate the barrier, the Go runtime “starts the world” and forces the workers to do the garbage collection work.
 
 2. Marking is carried out by the tri-color algorithm. When marking starts, all objects are white except for the gray root objects. Roots are the object from which all other heap objects are taken and are created as part of program execution. The garbage collector starts marking by looking at stacks, global variables, and heap pointers to understand what is being used. When scanning a stack, the worker stops the goroutine and marks all found objects in gray, moving down from the roots. It then resumes the goroutine.
 
