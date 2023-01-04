@@ -1,0 +1,3 @@
+# Allocator
+
+Go runtime uses **[TCMalloc](https://github.com/google/tcmalloc)** instead of using Linux `malloc`. This is due to the fact that **TCMalloc** tries to minimize possible [memory fragmentation](https://en.wikipedia.org/wiki/Fragmentation_(computing)#Internal_fragmentation). Memory fragmentation can also be eliminated by using the *GC*, which will move objects to other places in memory. But this leads to an additional overhead, since the addresses of the moved objects change, and you also have to modify the links of those objects that refer to them. This is an expensive operation that can cause an increase in process response time.
