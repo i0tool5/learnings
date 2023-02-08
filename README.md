@@ -8,6 +8,7 @@ The purpose of this - some kind of centralization and/or systematization of know
 ## Table of contents
 
 - Theory
+- [PC Architecture](/pc-architecture/README.md)
 - [GoLang](/golang/README.md)
 - [Python](/python/README.md)
 - [Rust](/rust-lang/README.md)

@@ -1,0 +1,3 @@
+*.local
+.mypy_cache
+.pytest_cache
