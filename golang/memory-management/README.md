@@ -16,7 +16,7 @@ They abstract memory handling, but are still not without flaws.
 # Links:
 ## Garbage collection
 - Official Go [documentation](https://go.dev/doc/gc-guide) about GC
-- Original article about [GC in go](https://medium.com/@ankur_anand/a-visual-guide-to-golang-memory-allocator-from-ground-up-e132258453ed)
+- Article about [GC in go](https://medium.com/@ankur_anand/a-visual-guide-to-golang-memory-allocator-from-ground-up-e132258453ed)
 - About the Go garbage collector in the [go blog](https://blog.golang.org/ismmkeynote) and [google groups](https://groups.google.com/g/golang-nuts/c/KJiyv2mV2pU/m/wdBUH1mHCAAJ).
 - About switching to [another type of GC](http://golang.org/s/gctoc)
 ## Allocator

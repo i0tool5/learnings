@@ -1,7 +1,7 @@
 # Garbage collector
 Go uses [tracing](https://en.wikipedia.org/wiki/Tracing_garbage_collection) non-generational concurrent, tri-color mark and sweep (non-moving) garbage collector. What this means will be described in more detail below.
 - **non-generational**. The generational hypothesis suggests that short-lived objects, such as temporary variables, are most often cleaned up. Thus, the generational garbage collector focuses on newly allocated objects. However, as mentioned earlier, compiler optimizations allow Go to allocate objects on the stack with a known lifetime. This means that there will be fewer objects on the heap that will be collected by the garbage collector. In turn, this means that a generational garbage collector is not needed in Go. So Go uses a non-generational garbage collector.
-- **concurrent** means concurrent 😁, meaning the GC runs concurrently with the mutator threads. Therefore, Go uses a non-generational concurrent garbage collector.
+- **concurrent** means concurrent 😁, meaning the GC runs concurrently with the mutator and busines logic. Therefore, Go uses a non-generational concurrent garbage collector.
 - **Mark and sweep** is a type of garbage collector and **tri-color** is the algorithm used to implement it. This type of garbage collector has two phases - mark and sweep , which means mark and clean. During the first phase, it walks through the memory on the heap and marks objects that can be removed. During the second phase, the marked areas of memory are cleared.
 - **non-moving** means that GC isn't move the live objects to a new part of memory. This technique is opposite to *mark and sweep*, where unused objects are marked to be cleared and can be reused. 
 
@@ -23,3 +23,7 @@ This process is started again when the program allocates additional memory propo
 - goroutine stop time (STW phase) has been reduced to 10 milliseconds per GC iteration (50 milliseconds total).
 - if STW does not meet the allotted 10 milliseconds, then the GC switches to concurrent mode,
 running simultaneously with the rest of the program for the remaining 40 milliseconds.
+
+## Sweep
+
+Sweep is running in the background, releasing the memory. marked white. But this process may not be complete in time. Therefore, it should be noted that a part of the sweeping is laid of the memory allocation process. When process needs more memory, it calls malloc, but before allocation new memory, it must make shure that there are no old unnecessary objects in memory. 
