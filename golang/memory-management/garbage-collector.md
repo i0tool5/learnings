@@ -26,4 +26,4 @@ running simultaneously with the rest of the program for the remaining 40 millise
 
 ## Sweep
 
-Sweep is running in the background, releasing the memory. marked white. But this process may not be complete in time. Therefore, it should be noted that a part of the sweeping is laid of the memory allocation process. When process needs more memory, it calls malloc, but before allocation new memory, it must make shure that there are no old unnecessary objects in memory. 
+Sweep is running in the background, releasing the memory. marked white. But this process may not be complete in time. Therefore, it should be noted that a part of the sweeping is laid of the memory allocation process. When process needs more memory, it calls mememory allocation system, but before allocation new memory, it must make shure that there are no old unnecessary objects in memory. 
