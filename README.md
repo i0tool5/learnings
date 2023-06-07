@@ -16,3 +16,4 @@ The purpose of this - some kind of centralization and/or systematization of know
 - InfoSec
 - Networks
 - [Administration](/administration/README.md)
+- [Miscellaneous](/miscell/README.md)
