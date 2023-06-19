@@ -28,3 +28,4 @@ docker run \
 - [OpenStreetMap](https://wiki.openstreetmap.org/wiki/Main_Page) Wiki
 - [OpenMapTiles](https://openmaptiles.org/)
 - [Switch to OSM](https://switch2osm.org/)
+- More about styles on [MapBox](https://docs.mapbox.com/mapbox-gl-js/style-spec/)
