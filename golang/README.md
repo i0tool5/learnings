@@ -7,6 +7,7 @@ This directory contains theory and code samples for the Go programming language
 - [Maps internals](./maps-internals/README.md)
 - [Memory management](./memory-management/README.md)
 - [Going unsafe with Go](./going-unsafe/README.md)
+- [Reflect method names](./reflect-method-names/README.md)
 - [Scheduler](./scheduler/README.md)
 
 # Example code
