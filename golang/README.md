@@ -9,6 +9,7 @@ This directory contains theory and code samples for the Go programming language
 - [Going unsafe with Go](./going-unsafe/README.md)
 - [Reflect method names](./reflect-method-names/README.md)
 - [Scheduler](./scheduler/README.md)
+- [Build tags](./build-tags/README.md)
 
 # Example code
 
