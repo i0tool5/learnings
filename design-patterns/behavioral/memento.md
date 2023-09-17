@@ -117,3 +117,104 @@ func TestMemento(t *testing.T) {
 	}
 }
 ```
+
+### Python
+
+```python
+import abc
+import hashlib
+import pickle
+import typing
+
+
+class Memento:
+    def __init__(self, state):
+        self.__state = state
+
+    def get_state(self) -> typing.Any:
+        return self.__state
+
+
+class Caretaker:
+    def __init__(self,):
+        self.__memento: Memento
+
+    def save(self, memento: Memento):
+        self.__memento = memento
+
+    def retrieve(self) -> Memento:
+        return self.__memento
+
+
+class OriginatorABC(abc.ABC):
+    @abc.abstractmethod
+    def create_memento(self) -> Memento:
+        ...
+
+    @abc.abstractmethod
+    def apply_memento(self, memento: Memento):
+        ...
+
+
+class Originator(OriginatorABC):
+    def create_memento(self) -> Memento:
+        state = self._create_state()
+        return Memento(state)
+
+    def apply_memento(self, memento: Memento):
+        state = memento.get_state()
+        self._apply_state(state)
+
+    def _apply_state(self, state: typing.Any):
+        loaded = pickle.loads(state)
+        self = loaded
+
+    def _create_state(self):
+        return pickle.dumps(self)
+
+
+class Profile(Originator):
+    def __init__(
+            self,
+            name: str,
+            password: str
+        ) -> None:
+
+        self.name: str = name
+        self.__password: str = hashlib.md5(password.encode()).hexdigest()
+        self.__views: int = 1
+        self.__locked: bool = False
+    
+    def lock(self):
+        self.__locked = True
+        self.__views = -1
+    
+    def is_locked(self) -> bool:
+        return self.__locked
+    
+    def get_views(self):
+        return self.__views
+
+    def compare_password(self, passwd: str) -> bool:
+        return self.__password == hashlib.md5(passwd.encode()).hexdigest()
+
+
+def main():
+    caretaker = Caretaker()
+    user_profile = Profile("i0tool", "so strong")
+    caretaker.save(user_profile.create_memento())
+
+    user_profile.lock()
+
+    assert user_profile.is_locked(), True
+    assert user_profile.get_views(), -1
+
+    user_profile.apply_memento(caretaker.retrieve())
+    assert user_profile.name, "i0tool"
+    assert user_profile.is_locked(), False
+    assert user_profile.get_views(), 1
+    assert user_profile.compare_password("so strong")
+
+if __name__ == '__main__':
+    main()
+```
