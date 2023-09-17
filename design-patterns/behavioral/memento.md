@@ -1,4 +1,4 @@
-# Memento
+# Memento 📝
 Memento - is a behavioral design pattern that allows, without breaking encapsulation, to capture and store the internal state of an object so that it can later be restored to that state. When using this pattern, care should be taken if the originator may change other objects or resources—the memento pattern operates on a single object.
 
 This pattern is used when:
