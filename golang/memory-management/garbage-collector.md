@@ -40,3 +40,9 @@ The first type of barrier consistently support this invariant: black objects onl
 ## Sweep
 
 Sweep is running in the background, releasing the memory. marked white. But this process may not be complete in time. Therefore, it should be noted that a part of the sweeping is laid of the memory allocation process. When process needs more memory, it calls memory allocation system, but before allocation new memory, it must make shure that there are no old unnecessary objects in memory. 
+
+# Garbage Collector Pacer
+
+**Garbage Collector Pacer** - is mechanism that keeps track of the moment at which garbage collection should begin.
+
+There is a proposal for [pacer redesign](https://github.com/golang/proposal/blob/master/design/44167-gc-pacer-redesign.md).
