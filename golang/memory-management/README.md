@@ -19,5 +19,8 @@ They abstract memory handling, but are still not without flaws.
 - Article about [GC in go](https://medium.com/@ankur_anand/a-visual-guide-to-golang-memory-allocator-from-ground-up-e132258453ed)
 - About the Go garbage collector in the [go blog](https://blog.golang.org/ismmkeynote) and [google groups](https://groups.google.com/g/golang-nuts/c/KJiyv2mV2pU/m/wdBUH1mHCAAJ).
 - About switching to [another type of GC](http://golang.org/s/gctoc)
+- GC [source code](https://github.com/golang/go/blob/master/src/runtime/mgc.go) (`src/runtime/mgc.go`)
+- GC marker [source code](https://github.com/golang/go/blob/master/src/runtime/mgcmark.go)(`src/runtime/mgcmark.go`)
+- GC sweeper [source code](https://github.com/golang/go/blob/master/src/runtime/mgcsweep.go)(`src/runtime/mgcsweep.go`)
 ## Allocator
-- Go memory allocator [source code](https://github.com/golang/go/blob/master/src/runtime/malloc.go)
+- Go memory allocator [source code](https://github.com/golang/go/blob/master/src/runtime/malloc.go) (`src/runtime/malloc.go`)
