@@ -14,7 +14,7 @@ The purpose of this - some kind of centralization and/or systematization of know
 - [Rust](/rust-lang/README.md)
 - [Databases](/databases/README.md)
 - InfoSec
-- Networks
+- [Networks](/networks/README.md)
 - [Administration](/administration/README.md)
 - [Miscellaneous](/miscell/README.md)
 - [Design Patterns](/design-patterns/README.md)
