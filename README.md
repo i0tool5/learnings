@@ -18,3 +18,4 @@ The purpose of this - some kind of centralization and/or systematization of know
 - [Administration](/administration/README.md)
 - [Miscellaneous](/miscell/README.md)
 - [Design Patterns](/design-patterns/README.md)
+- [Data Structures](/data-structures/README.md)
