@@ -22,7 +22,7 @@ There are two types of Behavioral Patterns:
 
 - **Composition** is the same as aggregation, but composite objects cannot exist separately from the container object and if the container is destroyed, then all its contents will be destroyed too. For example, an object was created in a container object method and assigned to a container property. From the outside, no one knows about the created object, which means that when the container is deleted, the created object will be deleted in the same way, because there is no external reference to it.
 
-## List of Behavioral patters
+## List of Behavioral patterns
 
 - [**Memento**](memento.md)
 - [**Mediator**](mediator.md)
