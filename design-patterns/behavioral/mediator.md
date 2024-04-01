@@ -14,7 +14,6 @@ The pattern operates with two entities:
 ### Python
 
 ```python
-import inspect
 from abc import ABC, abstractmethod
 from typing import Any
 from weakref import proxy
@@ -86,3 +85,8 @@ if __name__ == '__main__':
 	bob.send('Oh yeah!')
 	eve.send("No, i'm not ready!")
 ```
+
+## Notes
+
+- **Mediator** is one of the patterns that uses publish/subscribe architectural pattern.
+
