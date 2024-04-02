@@ -29,3 +29,4 @@ There are two types of Behavioral Patterns:
 - [**Iterator**](iterator.md)
 - [**State**](state.md)
 - [**Observer**](observer.md)
+- [**Visitor**](visitor.md)
