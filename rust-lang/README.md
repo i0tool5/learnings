@@ -5,6 +5,7 @@ This directory contains theory and code samples for the Rust programming languag
 ## Theory
 
 - [Fat pointers](./theory/fat-pointers.md)
+- [Static linking](./theory/static-linking.md)
 
 TODO: write doc about *`vtable`*
 
