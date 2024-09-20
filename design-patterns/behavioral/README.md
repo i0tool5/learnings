@@ -30,4 +30,5 @@ There are two types of Behavioral Patterns:
 - [**Memento**](memento.md)
 - [**Observer**](observer.md)
 - [**State**](state.md)
+- [**Strategy**](strategy.md)
 - [**Visitor**](visitor.md)
