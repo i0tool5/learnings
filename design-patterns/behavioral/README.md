@@ -24,9 +24,10 @@ There are two types of Behavioral Patterns:
 
 ## List of Behavioral patterns
 
-- [**Memento**](memento.md)
-- [**Mediator**](mediator.md)
+- [**Command**](command.md)
 - [**Iterator**](iterator.md)
-- [**State**](state.md)
+- [**Mediator**](mediator.md)
+- [**Memento**](memento.md)
 - [**Observer**](observer.md)
+- [**State**](state.md)
 - [**Visitor**](visitor.md)
