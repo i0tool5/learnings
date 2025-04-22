@@ -4,6 +4,8 @@
 
 ### Go
 
+> **NOTE**: this implementation does not rebalance the tree and may have some other flaws so it is not perfect 🙂.
+
 ```go
 package datastructures
 
