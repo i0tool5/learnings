@@ -14,8 +14,8 @@ import (
 	"testing"
 )
 
-// NewBTree returns new binary search tree.
-func NewBTree[T cmp.Ordered](values []T) *BTree[T] {
+// NewBSTree returns new binary search tree.
+func NewBSTree[T cmp.Ordered](values []T) *BSTree[T] {
 	if len(values) == 0 {
 		return nil
 	}
@@ -24,24 +24,24 @@ func NewBTree[T cmp.Ordered](values []T) *BTree[T] {
 	copy(valsCopy, values)
 	slices.Sort(valsCopy)
 
-	var tree *BTree[T]
+	var tree *BSTree[T]
 	tree = tree.insertBalanced(valsCopy)
 
 	return tree
 }
 
-// BTree represents binary tree.
-type BTree[T cmp.Ordered] struct {
+// BSTree represents binary tree.
+type BSTree[T cmp.Ordered] struct {
 	Value T
-	Left  *BTree[T]
-	Right *BTree[T]
+	Left  *BSTree[T]
+	Right *BSTree[T]
 }
 
 // Insert adds single tree node with given value to binary tree. This method doesn't
 // rebalance the tree.
-func (b *BTree[T]) Insert(value T) *BTree[T] {
+func (b *BSTree[T]) Insert(value T) *BSTree[T] {
 	if b == nil {
-		t := &BTree[T]{
+		t := &BSTree[T]{
 			Value: value,
 			Left:  nil,
 			Right: nil,
@@ -63,7 +63,7 @@ func (b *BTree[T]) Insert(value T) *BTree[T] {
 }
 
 // Search performs search in binary tree.
-func (b *BTree[T]) Search(value T) *BTree[T] {
+func (b *BSTree[T]) Search(value T) *BSTree[T] {
 	if b == nil {
 		return nil
 	}
@@ -82,11 +82,11 @@ func (b *BTree[T]) Search(value T) *BTree[T] {
 
 // insertBalanced is in charge for insert tree nodes with proper selection of base element
 // for node value to make it balanced.
-func (b *BTree[T]) insertBalanced(values []T) *BTree[T] {
+func (b *BSTree[T]) insertBalanced(values []T) *BSTree[T] {
 	valNum := len(values) / 2
 	baseElement := values[valNum]
 	if b == nil {
-		t := &BTree[T]{
+		t := &BSTree[T]{
 			Value: baseElement,
 		}
 		b = t
@@ -103,11 +103,11 @@ func (b *BTree[T]) insertBalanced(values []T) *BTree[T] {
 	return b
 }
 
-func TestNewBTree(t *testing.T) {
+func TestNewBSTree(t *testing.T) {
 	tests := []struct {
 		name   string
 		values []int
-		want   *BTree[int]
+		want   *BSTree[int]
 	}{
 		{
 			name:   "should successfully crete empty tree with nil vlues",
@@ -122,7 +122,7 @@ func TestNewBTree(t *testing.T) {
 		{
 			name:   "should successfully crete tree with single value",
 			values: []int{1},
-			want: &BTree[int]{
+			want: &BSTree[int]{
 				Value: 1,
 				Left:  nil,
 				Right: nil,
@@ -131,20 +131,20 @@ func TestNewBTree(t *testing.T) {
 		{
 			name:   "should successfully crete tree with values",
 			values: []int{1, 2, 3, 4, 5, 6},
-			want: &BTree[int]{
+			want: &BSTree[int]{
 				Value: 4,
-				Left: &BTree[int]{
+				Left: &BSTree[int]{
 					Value: 2,
-					Left: &BTree[int]{
+					Left: &BSTree[int]{
 						Value: 1,
 					},
-					Right: &BTree[int]{
+					Right: &BSTree[int]{
 						Value: 3,
 					},
 				},
-				Right: &BTree[int]{
+				Right: &BSTree[int]{
 					Value: 6,
-					Left: &BTree[int]{
+					Left: &BSTree[int]{
 						Value: 5,
 						Left:  nil,
 						Right: nil,
@@ -155,27 +155,27 @@ func TestNewBTree(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := NewBTree(tt.values)
+			got := NewBSTree(tt.values)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Fatalf("NewBalancedBTree() = %v, want %v", got, tt.want)
+				t.Fatalf("NewBalancedBSTree() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestBTree_Insert(t *testing.T) {
+func TestBSTree_Insert(t *testing.T) {
 	t.Run("should successfully insert value to the tree", func(t *testing.T) {
 		values := []int{1, 3, 5}
-		tree := NewBTree(values)
-		want := &BTree[int]{
+		tree := NewBSTree(values)
+		want := &BSTree[int]{
 			Value: 3,
-			Left: &BTree[int]{
+			Left: &BSTree[int]{
 				Value: 1,
-				Right: &BTree[int]{
+				Right: &BSTree[int]{
 					Value: 2,
 				},
 			},
-			Right: &BTree[int]{
+			Right: &BSTree[int]{
 				Value: 5,
 			},
 		}
@@ -187,10 +187,10 @@ func TestBTree_Insert(t *testing.T) {
 	})
 }
 
-func TestBTree_Search(t *testing.T) {
+func TestBSTree_Search(t *testing.T) {
 	t.Run("should successfully find node by value in the tree", func(t *testing.T) {
 		values := []int{1, 2, 3, 4, 5, 6, 7, 8}
-		tree := NewBTree(values)
+		tree := NewBSTree(values)
 		want := 8
 
 		got := tree.Search(want)
@@ -204,7 +204,7 @@ func TestBTree_Search(t *testing.T) {
 
 	t.Run("should return nil node when value is not in the tree", func(t *testing.T) {
 		values := []string{"value1", "value2", "value3"}
-		tree := NewBTree(values)
+		tree := NewBSTree(values)
 
 		got := tree.Search("non_existing")
 		if got != nil {
@@ -213,7 +213,7 @@ func TestBTree_Search(t *testing.T) {
 	})
 
 	t.Run("should return nil on empty tree", func(t *testing.T) {
-		tree := BTree[int]{}
+		tree := BSTree[int]{}
 
 		got := tree.Search(123)
 		if got != nil {
