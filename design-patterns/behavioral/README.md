@@ -33,3 +33,4 @@ There are two types of Behavioral Patterns:
 - [**Strategy**](strategy.md)
 - [**Template method**](template_method.md)
 - [**Visitor**](visitor.md)
+- [**Chain of responsibility**](chain_of_responsibility.md)
