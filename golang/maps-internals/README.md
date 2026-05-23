@@ -177,6 +177,119 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
 func mapaccess2(t *maptype, h *hmap, key unsafe.Pointer) (unsafe.Pointer, bool)
 ```
 
+## Changes in Go implementation v1.24
+
+Since Go v1.24 there is [changes in the map implementation](https://go.dev/doc/go1.24#runtime). Now its uses swiss table.
+
+Now, instead of `hmap` there is `Map` structure:
+
+```go
+type Map struct {
+	// The number of filled slots (i.e. the number of elements in all
+	// tables). Excludes deleted slots.
+	// Must be first (known by the compiler, for len() builtin).
+	used uint64
+
+	// seed is the hash seed, computed as a unique random number per map.
+	seed uintptr
+
+	// The directory of tables.
+	//
+	// Normally dirPtr points to an array of table pointers
+	//
+	// dirPtr *[dirLen]*table
+	//
+	// The length (dirLen) of this array is `1 << globalDepth`. Multiple
+	// entries may point to the same table. See top-level comment for more
+	// details.
+	//
+	// Small map optimization: if the map always contained
+	// abi.MapGroupSlots or fewer entries, it fits entirely in a
+	// single group. In that case dirPtr points directly to a single group.
+	//
+	// dirPtr *group
+	//
+	// In this case, dirLen is 0. used counts the number of used slots in
+	// the group. Note that small maps never have deleted slots (as there
+	// is no probe sequence to maintain).
+	dirPtr unsafe.Pointer
+	dirLen int
+
+	// The number of bits to use in table directory lookups.
+	globalDepth uint8
+
+	// The number of bits to shift out of the hash for directory lookups.
+	// On 64-bit systems, this is 64 - globalDepth.
+	globalShift uint8
+
+	// writing is a flag that is toggled (XOR 1) while the map is being
+	// written. Normally it is set to 1 when writing, but if there are
+	// multiple concurrent writers, then toggling increases the probability
+	// that both sides will detect the race.
+	writing uint8
+
+	// tombstonePossible is false if we know that no table in this map
+	// contains a tombstone.
+	tombstonePossible bool
+
+	// clearSeq is a sequence counter of calls to Clear. It is used to
+	// detect map clears during iteration.
+	clearSeq uint64
+}
+```
+As comment notes `dirPtr` is a poiner to an array of swiss tables.
+
+Swiss table structure is looks like this:
+```go
+// table is a Swiss table hash table structure.
+//
+// Each table is a complete hash table implementation.
+//
+// Map uses one or more tables to store entries. Extendible hashing (hash
+// prefix) is used to select the table to use for a specific key. Using
+// multiple tables enables incremental growth by growing only one table at a
+// time.
+type table struct {
+	// The number of filled slots (i.e. the number of elements in the table).
+	used uint16
+
+	// The total number of slots (always 2^N). Equal to
+	// `(groups.lengthMask+1)*abi.MapGroupSlots`.
+	capacity uint16
+
+	// The number of slots we can still fill without needing to rehash.
+	//
+	// We rehash when used + tombstones > loadFactor*capacity, including
+	// tombstones so the table doesn't overfill with tombstones. This field
+	// counts down remaining empty slots before the next rehash.
+	growthLeft uint16
+
+	// The number of bits used by directory lookups above this table. Note
+	// that this may be less then globalDepth, if the directory has grown
+	// but this table has not yet been split.
+	localDepth uint8
+
+	// Index of this table in the Map directory. This is the index of the
+	// _first_ location in the directory. The table may occur in multiple
+	// sequential indices.
+	//
+	// index is -1 if the table is stale (no longer installed in the
+	// directory).
+	index int
+
+	// groups is an array of slot groups. Each group holds abi.MapGroupSlots
+	// key/elem slots and their control bytes. A table has a fixed size
+	// groups array. The table is replaced (in rehash) when more space is
+	// required.
+	//
+	// TODO(prattmic): keys and elements are interleaved to maximize
+	// locality, but it comes at the expense of wasted space for some types
+	// (consider uint8 key, uint64 element). Consider placing all keys
+	// together in these cases to save space.
+	groups groupsReference
+}
+```
+
 ## Notes
 
 ### Maps are passed to function by value.
@@ -269,3 +382,9 @@ r := uintptr(fastrand())
 
 ## Conclusion
 Knowing the internals of a map will help you write more efficient code 😉.
+
+## Links
+
+- Old (Go < v1.24) map [implementation](https://github.com/golang/go/blob/go1.23.9/src/runtime/map.go)
+- New Go's builtin map [implementation](https://github.com/golang/go/blob/go1.26.0/src/internal/runtime/maps/map.go) for Go v1.26
+- Swiss table [implementation](https://github.com/golang/go/blob/master/src/internal/runtime/maps/table.go)
